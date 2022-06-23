@@ -130,7 +130,7 @@ namespace cg::renderer
 			const RT& in_clear_value)
 	{
 		// TODO: Lab 2.01. Implement set_render_target, set_viewport, and clear_render_target methods of raytracer class
-		for (size_t i = 0; i < render_target ->get_number_of_elements(); i++)
+		for (size_t i = 0; i < render_target->get_number_of_elements(); i++)
 		{
 			render_target->item(i) = in_clear_value;
 		}
@@ -169,15 +169,15 @@ namespace cg::renderer
 	{
 		for (int x = 0; x < width; x++)
 		{
-			for (int y = 0; y < y < hei; y++)
+			for (int y = 0; y < height; y++)
 			{
 				float u = (2.f*x)/static_cast<float>(width - 1)- 1.f;
 				float v = (2.f * y) / static_cast<float>(height - 1) - 1.f;
-				u *= static_cast<float>(width) / safe_cast<float>(height);
+				u *= static_cast<float>(width) / static_cast<float>(height);
 				float3 ray_direction = direction + u*right - v*up;
 				ray ray(position, ray_direction);
 
-				payload = trace_ray(ray, depth);
+				payload payload= trace_ray(ray, depth);
 
 				render_target->item(x, y) = RT::from_color(payload.color);
 
