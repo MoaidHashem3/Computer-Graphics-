@@ -127,6 +127,7 @@ namespace cg::renderer
 		std::shared_ptr<cg::resource<float3>> history;
 		std::vector<std::shared_ptr<cg::resource<unsigned int>>> index_buffers;
 		std::vector<std::shared_ptr<cg::resource<VB>>> vertex_buffers;
+		std::vector<triangle<VB>> triangles;
 
 		size_t width = 1920;
 		size_t height = 1080;
@@ -144,7 +145,6 @@ namespace cg::renderer
 	inline void raytracer<VB, RT>::clear_render_target(
 			const RT& in_clear_value)
 	{
-		// TODO: Lab 2.01. Implement set_render_target, set_viewport, and clear_render_target methods of raytracer class
 		for (size_t i = 0; i < render_target->get_number_of_elements(); i++)
 		{
 			render_target->item(i) = in_clear_value;
@@ -165,6 +165,22 @@ namespace cg::renderer
 	template<typename VB, typename RT>
 	inline void raytracer<VB, RT>::build_acceleration_structure()
 	{
+		for (size_t shape_id = 0; shape_id < index_buffers.size(); shape_id++)
+		{
+			auto& index_buffers = index_buffers[shape_id];
+			auto& vertex_buffers = vertex_buffers[shape_id];
+			size_t index_id = 0;
+			while (index_buffers<index_buffers->get_number_of_elements())
+			{
+				triangle<VB> triangle(
+						vertex_buffers->item(index_buffers->item(index_id++)),
+						vertex_buffers->item(index_buffers->item(index_id++)),
+						vertex_buffers->item(index_buffers->item(index_id++)),
+
+				);
+				triangles.push_back(triangle);
+			}
+		}
 		// TODO: Lab 2.05. Implement build_acceleration_structure method of raytracer class
 	}
 
