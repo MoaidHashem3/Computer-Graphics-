@@ -47,6 +47,7 @@ void cg::renderer::ray_tracing_renderer::update() {}
 void cg::renderer::ray_tracing_renderer::render()
 {
 	// TODO: Lab 2.01. Implement miss_shader, image clearing, calling ray_generation, and saving in ray_tracing_renderer class
+	
 	// TODO: Lab 2.02. Add closest_hit_shader to raytracer class to return diffuse color
 	// TODO: Lab 2.03. Adjust closest_hit_shader of raytracer to implement Lambertian shading model
 	// TODO: Lab 2.04. Define any_hit_shader and miss_shader for shadow_raytracer
