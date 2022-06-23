@@ -54,9 +54,9 @@ namespace cg::renderer
 	inline triangle<VB>::triangle(
 			const VB& vertex_a, const VB& vertex_b, const VB& vertex_c)
 	{
-		a = floata3{vertex_a.x, vertex_a.y, vertex_a.z};
-		b = floata3{vertex_b.x, vertex_b.y, vertex_b.z};
-		c = floata3{vertex_c.x, vertex_c.y, vertex_c.z};
+		a = float3{vertex_a.x, vertex_a.y, vertex_a.z};
+		b = float3{vertex_b.x, vertex_b.y, vertex_b.z};
+		c = float3{vertex_c.x, vertex_c.y, vertex_c.z};
 
 		ba = b - a;
 		ca = c - a;
@@ -64,7 +64,7 @@ namespace cg::renderer
 		nb = float3{vertex_b.nx, vertex_b.ny, vertex_b.nz};
 		nc = float3{vertex_c.nx, vertex_c.ny, vertex_c.nz};
 
-		ambient = {vertex_a.amient_r, vertex_a.amient_g, vertex_a.amient_b};
+		ambient = {vertex_a.ambient_r, vertex_a.ambient_g, vertex_a.ambient_b};
 		diffuse = {vertex_a.diffuse_r, vertex_a.diffuse_g, vertex_a.diffuse_b};
 		emissive = {vertex_a.emissive_r, vertex_a.emissive_g, vertex_a.emissive_b};
 
@@ -167,17 +167,15 @@ namespace cg::renderer
 	{
 		for (size_t shape_id = 0; shape_id < index_buffers.size(); shape_id++)
 		{
-			auto& index_buffers = index_buffers[shape_id];
-			auto& vertex_buffers = vertex_buffers[shape_id];
+			auto& index_buffer = index_buffers[shape_id];
+			auto& vertex_buffer = vertex_buffers[shape_id];
 			size_t index_id = 0;
-			while (index_buffers<index_buffers->get_number_of_elements())
+			while (index_id < index_buffer->get_number_of_elements())
 			{
 				triangle<VB> triangle(
-						vertex_buffers->item(index_buffers->item(index_id++)),
-						vertex_buffers->item(index_buffers->item(index_id++)),
-						vertex_buffers->item(index_buffers->item(index_id++)),
-
-				);
+						vertex_buffer->item(index_buffer->item(index_id++)),
+						vertex_buffer->item(index_buffer->item(index_id++)),
+						vertex_buffer->item(index_buffer->item(index_id++)));
 				triangles.push_back(triangle);
 			}
 		}
@@ -227,15 +225,16 @@ namespace cg::renderer
 		depth--;
 
 		payload closest_hit_payload = {};
-		closest_hit_payload.t = maxx_t;
+		closest_hit_payload.t = max_t;
 		const triangle<VB>* closest_triangle = nullptr;
 		for (auto& triangle: triangles)
 		{
-			payload playload = intersection_shader(triangle, ray);
-			if (payload.t > min_t && payload.t < closest_hit_payload.t) {
-				
+			payload payload = intersection_shader(triangle, ray);
+			if (payload.t>min_t&&payload.t< closest_hit_payload.t) 
+			{
 				closest_hit_payload = payload;
 				closest_triangle = &triangle;
+			
 			}
 		}
 
