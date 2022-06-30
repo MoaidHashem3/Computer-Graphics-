@@ -227,8 +227,10 @@ void cg::renderer::dx12_renderer::copy_data(const void* buffer_data, const UINT 
 
 D3D12_VERTEX_BUFFER_VIEW cg::renderer::dx12_renderer::create_vertex_buffer_view(const ComPtr<ID3D12Resource>& vertex_buffer, const UINT vertex_buffer_size)
 {
-	// TODO Lab 3.04. Create vertex buffer views
 	D3D12_VERTEX_BUFFER_VIEW view{};
+	view.BufferLocation = vertex_buffer->GetGPUVirtualAddress();
+	view.StrideInBytes = sizeof(vertex);
+	view.SizeInBytes = vertex_buffer_size;
 	return view;
 }
 
@@ -281,7 +283,7 @@ void cg::renderer::dx12_renderer::load_assets()
 		index_bufffer_name += std::to_wstring(i);
 		create_resource_on_upload_heap(index_buffers[i], index_buffer_size, index_bufffer_name);
 		copy_data(index_buffer_data->get_data(), index_buffer_size, index_buffers[i]);
-
+		vertex_buffer_views[i] = create_vertex_buffer_view(vertex_buffers[i], vertex_buffer_size);
 	}
 
 	std::wstring const_bufffer_name(L"Constant buffer ");
